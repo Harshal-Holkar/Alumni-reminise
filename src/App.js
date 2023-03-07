@@ -1,7 +1,7 @@
 import './App.css';
 import { useState } from "react";
 import { storage } from './firebase';
-import { ref, uploadBytes, getDownloadURL, uploadBytesResumable} from 'firebase/storage';
+import { ref, getDownloadURL, uploadBytesResumable} from 'firebase/storage';
 import { v4 } from 'uuid';
 import {toDB} from './dfconfi';
 
@@ -97,7 +97,7 @@ uploadTask.on('state_changed',
       <h1>Alumni Relation IIT Delhi</h1>
       <div className="formbold-form-wrapper">
         <form>
-        <div className='thankYou hid'> Thank you for your Time</div>
+        <div className='thankYou hiden'> Thank you for your Time</div>
           <div className="formbold-input-flex">
             <div>
               <input
