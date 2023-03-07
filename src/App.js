@@ -1,9 +1,9 @@
 import './App.css';
 import { useState } from "react";
 import { storage } from './firebase';
-import { ref, getDownloadURL, uploadBytesResumable} from 'firebase/storage';
+import { ref, getDownloadURL, uploadBytesResumable } from 'firebase/storage';
 import { v4 } from 'uuid';
-import {toDB} from './dfconfi';
+import { toDB } from './dfconfi';
 
 function App() {
 
@@ -13,6 +13,7 @@ function App() {
   const [hostel, setHostel] = useState("");
   const [year, setYear] = useState("");
   const [message, setMessage] = useState("");
+  const [progress, setProgress] = useState(0);
 
   const handleChange = (e) => {
     console.log(e.target.files);
@@ -26,54 +27,56 @@ function App() {
   const Submit = (e) => {
     e.preventDefault();
     const urls = [];
+    
     const prefix = name;
     imgUploads.map((imgUpload) => {
       if (imgUpload == null) return null;
       const imageRef = ref(storage, `${prefix}/${v4() + imgUpload.name}`);
-      const uploadTask = uploadBytesResumable(imageRef,imgUpload);
+      const uploadTask = uploadBytesResumable(imageRef, imgUpload);
 
-// Listen for state changes, errors, and completion of the upload.
-uploadTask.on('state_changed',
-    (snapshot) => {
-        // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
-        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        // console.log('Upload is ' + progress + '% done');
-        // switch (snapshot.state) {
-        //     case 'paused':
-        //         console.log('Upload is paused');
-        //         break;
-        //     case 'running':
-        //         console.log('Upload is running');
-        //         break;
-        // }
-    },
-    (error) => {
-        // A full list of error codes is available at
-        // https://firebase.google.com/docs/storage/web/handle-errors
-        // switch (error.code) {
-        //     case 'storage/unauthorized':
-        //         // User doesn't have permission to access the object
-        //         break;
-        //     case 'storage/canceled':
-        //         // User canceled the upload
-        //         break;
+      // Listen for state changes, errors, and completion of the upload.
+      uploadTask.on('state_changed',
+        (snapshot) => {
+          // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+          const prog = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+          setProgress(prog);
+          // console.log('Upload is ' + progress + '% done');
+          // switch (snapshot.state) {
+          //     case 'paused':
+          //         console.log('Upload is paused');
+          //         break;
+          //     case 'running':
+          //         console.log('Upload is running');
+          //         break;
+          // }
+        },
+        (error) => {
+          // A full list of error codes is available at
+          // https://firebase.google.com/docs/storage/web/handle-errors
+          // switch (error.code) {
+          //     case 'storage/unauthorized':
+          //         // User doesn't have permission to access the object
+          //         break;
+          //     case 'storage/canceled':
+          //         // User canceled the upload
+          //         break;
 
-        //     // ...
+          //     // ...
 
-        //     case 'storage/unknown':
-        //         // Unknown error occurred, inspect error.serverResponse
-        //         break;
-        // }
-        console.log(error);
-    },
-    () => {
-        // Upload completed successfully, now we can get the download URL
-        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-          urls.push(downloadURL);
+          //     case 'storage/unknown':
+          //         // Unknown error occurred, inspect error.serverResponse
+          //         break;
+          // }
+          console.log(error);
+        },
+        () => {
+          // Upload completed successfully, now we can get the download URL
+          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+            urls.push(downloadURL);
             // console.log('File available at', downloadURL);
-        });
-    }
-);
+          });
+        }
+      );
       // uploadBytes(imageRef, imgUpload)
       //   .then((snapshot) => {
       //     getDownloadURL(snapshot.ref)
@@ -87,18 +90,20 @@ uploadTask.on('state_changed',
     });
     toDB(name, email, hostel, year, message, urls, prefix);
 
-    setEmail(""); setHostel(""); setMessage(""); setName(""); setEmail("");setYear("");
+    document.getElementById("TY").innerHTML = " Thank you for your Time";
 
-    
+    setEmail(""); setHostel(""); setMessage(""); setName(""); setEmail(""); setYear("");
+
+
   };
 
   return (
-    
+
     <div className="formbold-main-wrapper">
       <h1>Alumni Relation IIT Delhi</h1>
       <div className="formbold-form-wrapper">
-        <form>
-        <div className='thankYou hide'> Thank you for your Time</div>
+        <form onSubmit={Submit}>
+          <div className='thankYou' id='TY'></div>
           <div className="formbold-input-flex">
             <div>
               <input
@@ -170,6 +175,8 @@ uploadTask.on('state_changed',
 
           <div className="formbold-input-file">
 
+            <progress value={progress} max="100" />
+            <br />
             <label htmlFor="upload" className="formbold-input-label">
               <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <g clipPath="url(#clip0_1670_1531)">
@@ -192,7 +199,7 @@ uploadTask.on('state_changed',
             </label>
           </div>
 
-          <button className="formbold-btn" onClick={Submit}>
+          <button className="formbold-btn" type='submit'>
             Submit
           </button>
         </form>

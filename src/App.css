@@ -29,13 +29,14 @@ input, textarea{
   .thankYou{
     text-align: center;
     margin: 0 auto 1rem;
-    padding: 0.6rem;
+    padding: 1rem;
     font-size: larger;
     font-weight: 600;
-    background-color: #6a64f185;
-    width: 60%;
+    /* border: 1px solid #6a64f185; */
+    /* width: 60%; */
     border-radius: 2rem;
-    color: #eafffc;
+    color: #6b64f1;
+    /* height: 1.5rem; */
   }
 
   .hide{
