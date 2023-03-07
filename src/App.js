@@ -34,57 +34,21 @@ function App() {
       const imageRef = ref(storage, `${prefix}/${v4() + imgUpload.name}`);
       const uploadTask = uploadBytesResumable(imageRef, imgUpload);
 
-      // Listen for state changes, errors, and completion of the upload.
       uploadTask.on('state_changed',
         (snapshot) => {
-          // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
           const prog = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
           setProgress(prog);
-          // console.log('Upload is ' + progress + '% done');
-          // switch (snapshot.state) {
-          //     case 'paused':
-          //         console.log('Upload is paused');
-          //         break;
-          //     case 'running':
-          //         console.log('Upload is running');
-          //         break;
-          // }
         },
         (error) => {
-          // A full list of error codes is available at
-          // https://firebase.google.com/docs/storage/web/handle-errors
-          // switch (error.code) {
-          //     case 'storage/unauthorized':
-          //         // User doesn't have permission to access the object
-          //         break;
-          //     case 'storage/canceled':
-          //         // User canceled the upload
-          //         break;
-
-          //     // ...
-
-          //     case 'storage/unknown':
-          //         // Unknown error occurred, inspect error.serverResponse
-          //         break;
-          // }
           console.log(error);
         },
         () => {
-          // Upload completed successfully, now we can get the download URL
+          
           getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
             urls.push(downloadURL);
-            // console.log('File available at', downloadURL);
           });
         }
       );
-      // uploadBytes(imageRef, imgUpload)
-      //   .then((snapshot) => {
-      //     getDownloadURL(snapshot.ref)
-      //       .then((url) => {
-      //         urls.push(url);
-      //         console.log(urls);
-      //       });
-      //   });
 
       return null;
     });
@@ -110,7 +74,6 @@ function App() {
                 type="text"
                 name="name"
                 id="name"
-                // placeholder="Jane Cooper"
                 className="formbold-form-input"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
@@ -123,7 +86,6 @@ function App() {
                 type="email"
                 name="email"
                 id="email"
-                // placeholder="jhon@mail.com"
                 className="formbold-form-input"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -139,7 +101,6 @@ function App() {
                 type="text"
                 name="hostel"
                 id="hostel"
-                // placeholder="Your Hostel"
                 className="formbold-form-input"
                 value={hostel}
                 onChange={(e) => setHostel(e.target.value)}
@@ -151,7 +112,6 @@ function App() {
                 type="text"
                 name="year"
                 id="year"
-                // placeholder="Passing Year"
                 className="formbold-form-input"
                 value={year}
                 onChange={(e) => setYear(e.target.value)}
@@ -165,7 +125,6 @@ function App() {
               rows="6"
               name="message"
               id="message"
-              // placeholder="Write your stories/Memories..."
               className="formbold-form-input"
               value={message}
               onChange={(e) => setMessage(e.target.value)}
