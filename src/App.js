@@ -97,7 +97,7 @@ uploadTask.on('state_changed',
       <h1>Alumni Relation IIT Delhi</h1>
       <div className="formbold-form-wrapper">
         <form>
-        <div className='thankYou hiden'> Thank you for your Time</div>
+        <div className='thankYou hide'> Thank you for your Time</div>
           <div className="formbold-input-flex">
             <div>
               <input
